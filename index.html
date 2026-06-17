@@ -249,29 +249,33 @@ tbody tr:hover{background:rgba(127,127,127,.08)}tbody tr.row-hero:hover{backgrou
 @media(max-width:1000px){.hero-inner{grid-template-columns:1fr;gap:36px}.gauge-wrap{order:-1}.metrics{grid-template-columns:repeat(2,1fr)}.cols-2{grid-template-columns:1fr}}
 @media(max-width:620px){.wrap{padding:0 20px}.metrics{grid-template-columns:1fr}.cols-3{grid-template-columns:1fr}.hero{padding:60px 0 36px}}
 /* ── Bloque de video ── */
-.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;perspective:1400px}
+.video-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;perspective:1400px}
 .video-card{background:var(--card-bg);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;position:relative;backdrop-filter:blur(6px);transform-style:preserve-3d}
 .video-card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);z-index:1;pointer-events:none}
 [data-theme="light"] .video-card::before{display:none}
 .video-label{padding:18px 22px 14px;display:flex;align-items:center;gap:12px}
 .video-label-tag{font-family:'IBM Plex Mono';font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:4px 10px;border-radius:6px}
 .video-label-tag.tradicional{background:rgba(107,118,134,.14);color:var(--baseline)}
+.video-label-tag.semaforo{background:rgba(242,163,60,.14);color:var(--semaforo)}
 .video-label-tag.urbanmind{background:rgba(var(--acc-rgb),.12);color:var(--acc-text);box-shadow:0 0 14px rgba(var(--acc-rgb),.1)}
 .video-label-title{font-family:'Saira';font-weight:700;font-size:15px;color:var(--ink)}
 .video-label-sub{font-size:12px;font-weight:300;color:var(--muted);margin-top:2px}
 .video-placeholder{position:relative;width:100%;aspect-ratio:16/9;background:var(--surface-2);border-top:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .video-placeholder video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
 .video-placeholder video.loaded{display:block}
-.video-placeholder iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-placeholder iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 .video-placeholder .vp-icon{width:56px;height:56px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s}
 .video-card.has-video .vp-icon{display:none}
 .video-placeholder .vp-icon svg{margin-left:3px}
 .video-placeholder .vp-hint{font-family:'IBM Plex Mono';font-size:11px;color:var(--muted);letter-spacing:.06em;text-align:center;padding:0 24px}
 .video-card.has-video .vp-hint{display:none}
 .video-card.tradicional-card .video-placeholder .vp-icon{color:var(--baseline);border-color:rgba(107,118,134,.28)}
+.video-card.semaforo-card .video-placeholder .vp-icon{color:var(--semaforo);border-color:rgba(242,163,60,.32)}
+.video-card.semaforo-card .video-placeholder{background:color-mix(in srgb,var(--surface-2) 94%,rgba(242,163,60,.1))}
 .video-card.urbanmind-card .video-placeholder .vp-icon{color:var(--acc-text);border-color:rgba(var(--acc-rgb),.35);box-shadow:0 0 22px rgba(var(--acc-rgb),.1)}
 .video-card.urbanmind-card .video-placeholder{background:color-mix(in srgb,var(--surface-2) 94%,rgba(var(--acc-rgb),.1))}
 .video-footer{padding:14px 22px;font-size:12.5px;color:var(--muted);font-weight:300;border-top:1px solid var(--line-soft);font-family:'IBM Plex Mono';letter-spacing:.02em}
+@media(max-width:1100px){.video-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){.video-grid{grid-template-columns:1fr}}
 /* ── Curvas de aprendizaje ── */
 .lc-band{stroke:none}
@@ -433,7 +437,7 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
   <div class="video-grid">
 
     <!-- ── Video 1: Sistema Tradicional ── -->
-    <div class="card video-card tradicional-card reveal has-video" id="videoCardTradicional">
+    <div class="card video-card tradicional-card has-video reveal" id="videoCardTradicional">
       <div class="video-label">
         <span class="video-label-tag tradicional">Control</span>
         <div>
@@ -442,17 +446,28 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
         </div>
       </div>
       <div class="video-placeholder" id="videoPlaceholderTradicional">
-        <iframe src="https://youtu.be/jR4__b_K84s?si=S2i_c0KytWTg8OOQ" title="Sistema Tradicional — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-policy" allowfullscreen></iframe>
-        <div class="vp-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
-        <div class="vp-hint">Video pendiente<br>Sistema tradicional · semáforo fijo</div>
+        <iframe id="videoTradicional" src="https://www.youtube.com/embed/sEiUIcqQRhA" title="Sistema Tradicional · UrbanMind X" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="video-footer">Espera promedio: <span style="color:var(--baseline);font-weight:600">303 s</span> &nbsp;·&nbsp; Línea base del experimento</div>
     </div>
 
-    <!-- ── Video 2: UrbanMind X ── -->
-    <div class="card video-card urbanmind-card reveal has-video" id="videoCardUrbanmind">
+    <!-- ── Video 2: Semáforo Inteligente ── -->
+    <div class="card video-card semaforo-card has-video reveal" id="videoCardSemaforo">
+      <div class="video-label">
+        <span class="video-label-tag semaforo">Agente 1</span>
+        <div>
+          <div class="video-label-title">Semáforo Inteligente</div>
+          <div class="video-label-sub">PPO · ciclos adaptados al flujo</div>
+        </div>
+      </div>
+      <div class="video-placeholder" id="videoPlaceholderSemaforo">
+        <iframe id="videoSemaforo" src="https://www.youtube.com/embed/iX8os0xKVj8" title="Semáforo Inteligente · UrbanMind X" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-footer">Espera promedio: <span style="color:var(--semaforo);font-weight:600">193 s</span> &nbsp;·&nbsp; <span style="color:var(--semaforo)">−36.5%</span> vs. sistema tradicional</div>
+    </div>
+
+    <!-- ── Video 3: UrbanMind X ── -->
+    <div class="card video-card urbanmind-card has-video reveal" id="videoCardUrbanmind">
       <div class="video-label">
         <span class="video-label-tag urbanmind">UrbanMind X</span>
         <div>
@@ -461,11 +476,7 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
         </div>
       </div>
       <div class="video-placeholder" id="videoPlaceholderUrbanmind">
-        <iframe src="https://www.youtube.com/embed/jR4__b_K84s" title="UrbanMind X — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-policy" allowfullscreen></iframe>
-        <div class="vp-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        </div>
-        <div class="vp-hint">Video pendiente<br>UrbanMind X · −78.2% de espera</div>
+        <iframe id="videoUrbanmind" src="https://www.youtube.com/embed/DsdAHNMbsgM" title="Sistema Completo · UrbanMind X" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
       <div class="video-footer">Espera promedio: <span style="color:var(--acc-text);font-weight:600;text-shadow:var(--glow-soft)">66 s</span> &nbsp;·&nbsp; <span style="color:var(--acc-text)">−78.2%</span> vs. sistema tradicional</div>
     </div>
@@ -1156,9 +1167,6 @@ function scrambleTitle(){
   })(performance.now());
 }
 
-/* ── Acceso directo /ETAPA1 → salta la intro y va a los videos ── */
-window.__goToVideos = /\/etapa1\/?(?:[?#].*)?$/i.test(window.location.pathname) || /etapa1/i.test(window.location.hash);
-
 window.addEventListener('load',()=>{
   /* Refuerzo: asegura que la intro siempre arranque desde el tope,
      aunque el navegador haya intentado restaurar el scroll. */
@@ -1179,18 +1187,6 @@ window.addEventListener('load',()=>{
   }
   function hideTitle(){ if(tc)tc.classList.add('gone'); }
 
-  function jumpToVideos(){
-    const sec=document.getElementById('videos');
-    if(sec) setTimeout(()=>sec.scrollIntoView({behavior:'smooth',block:'start'}),80);
-  }
-
-  /* Acceso directo a /ETAPA1: sin intro, directo a los videos */
-  if(window.__goToVideos){
-    revealHero(); hideTitle(); document.body.classList.add('intro-done');
-    jumpToVideos();
-    return;
-  }
-
   if(reduce){ revealHero(); document.body.classList.add('intro-done'); return; }
 
   // ── Secuencia cinematográfica: placa de título sobre la toma aérea → aterrizaje ──
@@ -1206,387 +1202,6 @@ window.addEventListener('load',()=>{
     timers.forEach(clearTimeout);hideTitle();revealHero();document.body.classList.add('intro-done');
   },{passive:true});
 });
-</script>
-
-<!-- ══════════════════════════════════════════════════════════
-     SIMULACIÓN EN VIVO — UrbanMindX Backend Integration
-     Bloque agregado sin tocar el HTML/CSS existente.
-     ══════════════════════════════════════════════════════════ -->
-<script>
-(function initSimLive() {
-
-  /* ── Configuración ─────────────────────────────────────── */
-  const BACKEND_URL = 'https://urbanmindx-api.onrender.com'; // ← tu URL de Render
-
-  const ESCENARIOS = [
-    { id: 'hora_pico',      nombre: 'Hora Pico',      color: '#ef4444' },
-    { id: 'normal',         nombre: 'Normal',          color: '#22c55e' },
-    { id: 'desbalanceado',  nombre: 'Desbalanceado',   color: '#f59e0b' },
-  ];
-  const BASE_ESPERA = { hora_pico: 48.5, normal: 22.3, desbalanceado: 65.2 };
-
-  /* ── 1. Inyectar CSS de Leaflet en <head> ─────────────── */
-  const lcss = document.createElement('link');
-  lcss.rel = 'stylesheet';
-  lcss.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-  document.head.appendChild(lcss);
-
-  /* ── 2. Estilos adicionales (sólo para los elementos nuevos) ── */
-  const style = document.createElement('style');
-  style.textContent = `
-    #sim-live .sim-esc-btn {
-      font-family:'IBM Plex Mono';font-size:11px;font-weight:600;
-      letter-spacing:.07em;text-transform:uppercase;
-      border:1px solid;border-radius:8px;padding:8px 14px;
-      cursor:pointer;background:transparent;transition:background .2s,opacity .2s;
-    }
-    #sim-live .sim-esc-btn.active { background: rgba(255,255,255,.08); }
-    #sim-run-btn {
-      font-family:'IBM Plex Mono';font-size:12px;font-weight:600;
-      letter-spacing:.1em;text-transform:uppercase;
-      border:1px solid rgba(var(--acc-rgb),.45);border-radius:10px;
-      padding:11px 26px;cursor:pointer;background:rgba(var(--acc-rgb),.08);
-      color:var(--acc-text);transition:background .2s,opacity .2s;
-      white-space:nowrap;
-    }
-    #sim-run-btn:hover { background:rgba(var(--acc-rgb),.18); }
-    #sim-run-btn:disabled { opacity:.42;cursor:not-allowed; }
-    #sim-map .leaflet-container { background:#04060A !important; }
-    #sim-map { border-radius:0; }
-    .sim-metric-val {
-      font-family:'Saira';font-weight:700;font-size:32px;
-      letter-spacing:-.02em;line-height:1;margin-top:6px;
-    }
-    .sim-phase-dot {
-      display:inline-block;width:10px;height:10px;border-radius:50%;
-      margin-right:7px;vertical-align:middle;
-    }
-  `;
-  document.head.appendChild(style);
-
-  /* ── 3. Crear sección de simulación e insertarla antes del footer ── */
-  const sec = document.createElement('section');
-  sec.className = 'section';
-  sec.id = 'sim-live';
-  sec.innerHTML = `
-<div class="wrap">
-  <div class="section-head reveal">
-    <div>
-      <div class="section-title">Simulación en vivo</div>
-      <div class="section-desc">Lanza una simulación real con los modelos PPO entrenados.
-        Los vehículos se dibujan en tiempo real sobre el mapa conforme la IA toma decisiones.</div>
-    </div>
-    <div class="section-tag">SUMO · WebSocket · PPO</div>
-  </div>
-
-  <!-- Controles -->
-  <div class="card reveal" style="margin-bottom:18px">
-    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
-      <div style="flex:1;min-width:220px">
-        <div class="metric-label" style="margin-bottom:10px">Escenario</div>
-        <div id="sim-scenarios" style="display:flex;gap:10px;flex-wrap:wrap"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <button id="sim-run-btn">▶ INICIAR SIMULACIÓN</button>
-        <div id="sim-status-txt" style="font-family:'IBM Plex Mono';font-size:11.5px;
-          color:var(--muted);text-align:right;letter-spacing:.04em">Listo para simular</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mapa + métricas -->
-  <div class="card no-tilt reveal" style="padding:0;overflow:hidden">
-    <div id="sim-map" style="width:100%;height:460px;background:var(--surface-2)"></div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-      gap:0;border-top:1px solid var(--line)">
-      <div style="padding:18px 24px;border-right:1px solid var(--line)">
-        <div class="metric-label">Espera promedio</div>
-        <div class="sim-metric-val" id="sm-espera" style="color:var(--acc-text)">— s</div>
-      </div>
-      <div style="padding:18px 24px;border-right:1px solid var(--line)">
-        <div class="metric-label">Throughput</div>
-        <div class="sim-metric-val" id="sm-thr" style="color:var(--vehiculo)">—</div>
-      </div>
-      <div style="padding:18px 24px;border-right:1px solid var(--line)">
-        <div class="metric-label">Fase semáforo</div>
-        <div id="sm-fase" style="font-family:'IBM Plex Mono';font-weight:600;font-size:15px;
-          color:var(--semaforo);margin-top:10px">—</div>
-      </div>
-      <div style="padding:18px 24px;border-right:1px solid var(--line)">
-        <div class="metric-label">Vehículos activos</div>
-        <div id="sm-veh" style="font-family:'IBM Plex Mono';font-weight:600;font-size:15px;
-          margin-top:10px">—</div>
-      </div>
-      <div style="padding:18px 24px">
-        <div class="metric-label">Mejora vs. fijo</div>
-        <div id="sm-mejora" style="margin-top:10px">—</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Leyenda de velocidad -->
-  <div style="display:flex;gap:20px;margin-top:12px;padding:0 4px;flex-wrap:wrap">
-    <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
-      <span class="sim-phase-dot" style="background:#1FE39B;box-shadow:0 0 6px #1FE39B"></span>Rápido (&gt;10 m/s)
-    </span>
-    <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
-      <span class="sim-phase-dot" style="background:#F2A33C;box-shadow:0 0 6px #F2A33C"></span>Moderado (5-10 m/s)
-    </span>
-    <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
-      <span class="sim-phase-dot" style="background:#FF5B47;box-shadow:0 0 6px #FF5B47"></span>Lento / detenido (&lt;5 m/s)
-    </span>
-    <span style="margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
-      Intersección: <b style="color:var(--ink-soft)">Pino Suárez × Venustiano Carranza · Toluca</b>
-    </span>
-  </div>
-</div>`;
-
-  const footer = document.querySelector('.footer');
-  footer.parentNode.insertBefore(sec, footer);
-
-  /* ── 4. Botones de escenario ───────────────────────────── */
-  let selectedEscenario = 'hora_pico';
-  const scenarioCont = document.getElementById('sim-scenarios');
-
-  ESCENARIOS.forEach((esc, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'sim-esc-btn' + (i === 0 ? ' active' : '');
-    btn.dataset.id = esc.id;
-    btn.textContent = esc.nombre;
-    btn.style.color = esc.color;
-    btn.style.borderColor = esc.color + '66';
-    btn.addEventListener('click', () => {
-      selectedEscenario = esc.id;
-      scenarioCont.querySelectorAll('.sim-esc-btn').forEach(b => {
-        b.classList.toggle('active', b.dataset.id === esc.id);
-      });
-    });
-    scenarioCont.appendChild(btn);
-  });
-
-  /* ── 5. Leaflet: carga y mapa ─────────────────────────── */
-  let leafletMap = null;
-  let vehicleMarkers = {};
-  let mapReady = false;
-
-  function getSpeedColor(speed) {
-    if (speed > 10) return '#1FE39B';
-    if (speed > 5)  return '#F2A33C';
-    return '#FF5B47';
-  }
-
-  function loadLeafletJS(cb) {
-    if (window.L) { cb(); return; }
-    const s = document.createElement('script');
-    s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    s.onload = cb;
-    document.head.appendChild(s);
-  }
-
-  function initMap() {
-    if (mapReady) return;
-    loadLeafletJS(() => {
-      mapReady = true;
-      leafletMap = L.map('sim-map', {
-        zoomControl: true,
-        attributionControl: false,
-      }).setView([19.28244, -99.65572], 17);
-
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        subdomains: 'abcd',
-      }).addTo(leafletMap);
-
-      L.circleMarker([19.28244, -99.65572], {
-        radius: 12,
-        color: '#1FE39B',
-        fillColor: '#1FE39B',
-        fillOpacity: 0.25,
-        weight: 2,
-      }).addTo(leafletMap).bindPopup('<b>Intersección UrbanMind X</b><br>Pino Suárez × Venustiano Carranza');
-    });
-  }
-
-  function clearVehicles() {
-    Object.values(vehicleMarkers).forEach(m => m.remove());
-    vehicleMarkers = {};
-  }
-
-  function drawVehicles(vehiculos) {
-    if (!leafletMap) return;
-    const active = new Set(vehiculos.map(v => v.id));
-
-    Object.keys(vehicleMarkers).forEach(id => {
-      if (!active.has(id)) { vehicleMarkers[id].remove(); delete vehicleMarkers[id]; }
-    });
-
-    vehiculos.forEach(v => {
-      const color = getSpeedColor(v.velocidad);
-      if (vehicleMarkers[v.id]) {
-        vehicleMarkers[v.id]
-          .setLatLng([v.lat, v.lng])
-          .setStyle({ color, fillColor: color });
-      } else {
-        vehicleMarkers[v.id] = L.circleMarker([v.lat, v.lng], {
-          radius: 7,
-          color,
-          fillColor: color,
-          fillOpacity: 0.85,
-          weight: 1.5,
-        }).addTo(leafletMap)
-          .bindTooltip(`${v.id} · ${v.velocidad.toFixed(1)} m/s`, { sticky: true });
-      }
-    });
-  }
-
-  /* ── 6. Métricas en pantalla ──────────────────────────── */
-  function setStatus(msg, color) {
-    const el = document.getElementById('sim-status-txt');
-    el.textContent = msg;
-    el.style.color = color || 'var(--muted)';
-  }
-
-  function updateMetrics(m) {
-    if (m.espera_promedio != null)
-      document.getElementById('sm-espera').textContent = m.espera_promedio.toFixed(1) + ' s';
-    if (m.throughput != null)
-      document.getElementById('sm-thr').textContent = m.throughput.toLocaleString() + ' v/h';
-  }
-
-  function updateFase(fase) {
-    const faseNames = { 0: 'Norte-Sur ↕', 1: 'Amarillo →', 2: 'Este-Oeste ↔', 3: 'Amarillo ↓' };
-    document.getElementById('sm-fase').textContent = faseNames[fase] || 'Fase ' + fase;
-  }
-
-  function showMejora(espera) {
-    const base = BASE_ESPERA[selectedEscenario] || 48.5;
-    const pct = ((base - espera) / base * 100);
-    const el = document.getElementById('sm-mejora');
-    if (pct > 0) {
-      el.innerHTML = `<span class="chip down" style="font-size:13px;padding:5px 12px">−${pct.toFixed(1)}% espera</span>`;
-    } else {
-      el.innerHTML = `<span class="chip up" style="font-size:13px;padding:5px 12px">+${Math.abs(pct).toFixed(1)}% espera</span>`;
-    }
-  }
-
-  /* ── 7. Flujo principal: POST + WebSocket ─────────────── */
-  let activeWs = null;
-  const runBtn = document.getElementById('sim-run-btn');
-
-  async function iniciarSimulacion() {
-    if (activeWs) { activeWs.close(); activeWs = null; }
-
-    initMap();
-    clearVehicles();
-    document.getElementById('sm-espera').textContent = '— s';
-    document.getElementById('sm-thr').textContent = '—';
-    document.getElementById('sm-fase').textContent = '—';
-    document.getElementById('sm-veh').textContent = '—';
-    document.getElementById('sm-mejora').textContent = '—';
-
-    runBtn.disabled = true;
-    runBtn.textContent = '⏳ INICIANDO…';
-    setStatus('Conectando al backend…', 'var(--acc-text)');
-
-    /* POST /simulaciones */
-    let simId;
-    try {
-      const res = await fetch(`${BACKEND_URL}/simulaciones`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          interseccion_id: selectedEscenario,
-          escenario: selectedEscenario,
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        setStatus('Error ' + res.status + ': ' + (err.detail || 'sin detalle'), '#FF5B47');
-        runBtn.disabled = false;
-        runBtn.textContent = '▶ REINTENTAR';
-        return;
-      }
-      const data = await res.json();
-      simId = data.simulacion_id;
-    } catch (e) {
-      setStatus('Sin conexión al backend (' + BACKEND_URL + ')', '#FF5B47');
-      runBtn.disabled = false;
-      runBtn.textContent = '▶ REINTENTAR';
-      return;
-    }
-
-    /* WebSocket /ws/{id} */
-    const wsUrl = BACKEND_URL.replace(/^https?/, m => m === 'https' ? 'wss' : 'ws') + `/ws/${simId}`;
-    const ws = new WebSocket(wsUrl);
-    activeWs = ws;
-
-    ws.onopen = () => {
-      runBtn.textContent = '■ DETENER';
-      runBtn.disabled = false;
-      runBtn.onclick = () => { ws.close(); };
-      setStatus('Simulando… (escenario: ' + selectedEscenario + ')', 'var(--acc-text)');
-    };
-
-    ws.onmessage = ev => {
-      let msg;
-      try { msg = JSON.parse(ev.data); } catch { return; }
-
-      if (msg.tipo === 'inicio') {
-        setStatus('Simulación en curso', 'var(--acc-text)');
-
-      } else if (msg.tipo === 'estado') {
-        if (msg.vehiculos)     drawVehicles(msg.vehiculos);
-        if (msg.metricas)      updateMetrics(msg.metricas);
-        if (msg.fase_semaforo != null) updateFase(msg.fase_semaforo);
-        const n = msg.vehiculos ? msg.vehiculos.length : 0;
-        document.getElementById('sm-veh').textContent = n + ' activos';
-
-      } else if (msg.tipo === 'fin') {
-        const mf = msg.metricas_finales;
-        if (mf) {
-          updateMetrics(mf);
-          if (mf.espera_promedio != null) showMejora(mf.espera_promedio);
-        }
-        setStatus('✓ Completada — ' + (selectedEscenario), 'var(--acc-text)');
-        runBtn.disabled = false;
-        runBtn.textContent = '▶ NUEVA SIMULACIÓN';
-        runBtn.onclick = iniciarSimulacion;
-        activeWs = null;
-
-      } else if (msg.tipo === 'error') {
-        setStatus('Error: ' + msg.mensaje, '#FF5B47');
-        runBtn.disabled = false;
-        runBtn.textContent = '▶ REINTENTAR';
-        runBtn.onclick = iniciarSimulacion;
-        activeWs = null;
-      }
-    };
-
-    ws.onerror = () => {
-      setStatus('Error de conexión WebSocket', '#FF5B47');
-    };
-
-    ws.onclose = () => {
-      if (runBtn.disabled) {
-        runBtn.disabled = false;
-        runBtn.textContent = '▶ NUEVA SIMULACIÓN';
-        runBtn.onclick = iniciarSimulacion;
-      }
-      activeWs = null;
-    };
-  }
-
-  runBtn.addEventListener('click', iniciarSimulacion);
-
-  /* ── 8. Reveal observer para los elementos de la nueva sección ── */
-  const revealObs = new IntersectionObserver(ents => {
-    ents.forEach(en => {
-      if (en.isIntersecting) { en.target.classList.add('in'); revealObs.unobserve(en.target); }
-    });
-  }, { threshold: 0.12 });
-  sec.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
-
-})();
 </script>
 </body>
 </html>
