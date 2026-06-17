@@ -168,7 +168,7 @@ body::before{
 .delta-badge{font-family:'IBM Plex Mono';font-weight:600;font-size:13px;opacity:0;transition:opacity .5s ease}
 
 .tooltip{position:absolute;pointer-events:none;background:var(--tip-bg);border:1px solid var(--line);color:#fff;border-radius:9px;padding:10px 13px;font-size:13px;opacity:0;transform:translate(-50%,-118%);transition:opacity .15s ease;white-space:nowrap;box-shadow:0 10px 34px rgba(0,0,0,.5);z-index:5;backdrop-filter:blur(8px)}
-.tooltip .tt-name{font-facmily:'IBM Plex Mono';font-weight:400;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;color:#9aa6b4}
+.tooltip .tt-name{font-family:'IBM Plex Mono';font-weight:400;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;color:#9aa6b4}
 .tooltip .tt-val{font-family:'Saira';font-weight:700;font-size:18px}
 .tooltip .tt-sub2{font-family:'IBM Plex Mono';font-size:11px;color:var(--vehiculo);margin-top:5px;border-top:1px solid var(--line);padding-top:5px}
 .tooltip::after{content:"";position:absolute;left:var(--arrow-x,50%);width:10px;height:10px;background:var(--tip-bg);transform:translateX(-50%) rotate(45deg)}
@@ -442,7 +442,7 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
         </div>
       </div>
       <div class="video-placeholder" id="videoPlaceholderTradicional">
-        <iframe src="https://youtu.be/jR4__b_K84s" title="Sistema Tradicional — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-policy" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/jR4__b_K84" title="Sistema Tradicional — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-policy" allowfullscreen></iframe>
         <div class="vp-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </div>
@@ -1086,6 +1086,26 @@ function mexpObserver(){
   o.observe(host);
 }
 
+/* ── Activación de video cuando se asigna src ── */
+function activateVideoCard(videoId, cardId){
+  const vid = document.getElementById(videoId);
+  const card = document.getElementById(cardId);
+  if(!vid || !card) return;
+  // Si ya tiene src al cargar la página
+  if(vid.src && vid.src !== window.location.href){
+    vid.classList.add('loaded');
+    card.classList.add('has-video');
+  }
+  // También escuchar si se carga dinámicamente
+  vid.addEventListener('loadedmetadata', ()=>{
+    vid.classList.add('loaded');
+    card.classList.add('has-video');
+  });
+}
+activateVideoCard('videoTradicional','videoCardTradicional');
+activateVideoCard('videoUrbanmind','videoCardUrbanmind');
+
+
 let __actx=null;
 function __getCtx(){
   if(!__actx){ try{__actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){return null;} }
@@ -1136,6 +1156,9 @@ function scrambleTitle(){
   })(performance.now());
 }
 
+/* ── Acceso directo /ETAPA1 → salta la intro y va a los videos ── */
+window.__goToVideos = /\/etapa1\/?(?:[?#].*)?$/i.test(window.location.pathname) || /etapa1/i.test(window.location.hash);
+
 window.addEventListener('load',()=>{
   /* Refuerzo: asegura que la intro siempre arranque desde el tope,
      aunque el navegador haya intentado restaurar el scroll. */
@@ -1156,6 +1179,18 @@ window.addEventListener('load',()=>{
   }
   function hideTitle(){ if(tc)tc.classList.add('gone'); }
 
+  function jumpToVideos(){
+    const sec=document.getElementById('videos');
+    if(sec) setTimeout(()=>sec.scrollIntoView({behavior:'smooth',block:'start'}),80);
+  }
+
+  /* Acceso directo a /ETAPA1: sin intro, directo a los videos */
+  if(window.__goToVideos){
+    revealHero(); hideTitle(); document.body.classList.add('intro-done');
+    jumpToVideos();
+    return;
+  }
+
   if(reduce){ revealHero(); document.body.classList.add('intro-done'); return; }
 
   // ── Secuencia cinematográfica: placa de título sobre la toma aérea → aterrizaje ──
@@ -1171,6 +1206,387 @@ window.addEventListener('load',()=>{
     timers.forEach(clearTimeout);hideTitle();revealHero();document.body.classList.add('intro-done');
   },{passive:true});
 });
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     SIMULACIÓN EN VIVO — UrbanMindX Backend Integration
+     Bloque agregado sin tocar el HTML/CSS existente.
+     ══════════════════════════════════════════════════════════ -->
+<script>
+(function initSimLive() {
+
+  /* ── Configuración ─────────────────────────────────────── */
+  const BACKEND_URL = 'https://urbanmindx-api.onrender.com'; // ← tu URL de Render
+
+  const ESCENARIOS = [
+    { id: 'hora_pico',      nombre: 'Hora Pico',      color: '#ef4444' },
+    { id: 'normal',         nombre: 'Normal',          color: '#22c55e' },
+    { id: 'desbalanceado',  nombre: 'Desbalanceado',   color: '#f59e0b' },
+  ];
+  const BASE_ESPERA = { hora_pico: 48.5, normal: 22.3, desbalanceado: 65.2 };
+
+  /* ── 1. Inyectar CSS de Leaflet en <head> ─────────────── */
+  const lcss = document.createElement('link');
+  lcss.rel = 'stylesheet';
+  lcss.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+  document.head.appendChild(lcss);
+
+  /* ── 2. Estilos adicionales (sólo para los elementos nuevos) ── */
+  const style = document.createElement('style');
+  style.textContent = `
+    #sim-live .sim-esc-btn {
+      font-family:'IBM Plex Mono';font-size:11px;font-weight:600;
+      letter-spacing:.07em;text-transform:uppercase;
+      border:1px solid;border-radius:8px;padding:8px 14px;
+      cursor:pointer;background:transparent;transition:background .2s,opacity .2s;
+    }
+    #sim-live .sim-esc-btn.active { background: rgba(255,255,255,.08); }
+    #sim-run-btn {
+      font-family:'IBM Plex Mono';font-size:12px;font-weight:600;
+      letter-spacing:.1em;text-transform:uppercase;
+      border:1px solid rgba(var(--acc-rgb),.45);border-radius:10px;
+      padding:11px 26px;cursor:pointer;background:rgba(var(--acc-rgb),.08);
+      color:var(--acc-text);transition:background .2s,opacity .2s;
+      white-space:nowrap;
+    }
+    #sim-run-btn:hover { background:rgba(var(--acc-rgb),.18); }
+    #sim-run-btn:disabled { opacity:.42;cursor:not-allowed; }
+    #sim-map .leaflet-container { background:#04060A !important; }
+    #sim-map { border-radius:0; }
+    .sim-metric-val {
+      font-family:'Saira';font-weight:700;font-size:32px;
+      letter-spacing:-.02em;line-height:1;margin-top:6px;
+    }
+    .sim-phase-dot {
+      display:inline-block;width:10px;height:10px;border-radius:50%;
+      margin-right:7px;vertical-align:middle;
+    }
+  `;
+  document.head.appendChild(style);
+
+  /* ── 3. Crear sección de simulación e insertarla antes del footer ── */
+  const sec = document.createElement('section');
+  sec.className = 'section';
+  sec.id = 'sim-live';
+  sec.innerHTML = `
+<div class="wrap">
+  <div class="section-head reveal">
+    <div>
+      <div class="section-title">Simulación en vivo</div>
+      <div class="section-desc">Lanza una simulación real con los modelos PPO entrenados.
+        Los vehículos se dibujan en tiempo real sobre el mapa conforme la IA toma decisiones.</div>
+    </div>
+    <div class="section-tag">SUMO · WebSocket · PPO</div>
+  </div>
+
+  <!-- Controles -->
+  <div class="card reveal" style="margin-bottom:18px">
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px">
+        <div class="metric-label" style="margin-bottom:10px">Escenario</div>
+        <div id="sim-scenarios" style="display:flex;gap:10px;flex-wrap:wrap"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <button id="sim-run-btn">▶ INICIAR SIMULACIÓN</button>
+        <div id="sim-status-txt" style="font-family:'IBM Plex Mono';font-size:11.5px;
+          color:var(--muted);text-align:right;letter-spacing:.04em">Listo para simular</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mapa + métricas -->
+  <div class="card no-tilt reveal" style="padding:0;overflow:hidden">
+    <div id="sim-map" style="width:100%;height:460px;background:var(--surface-2)"></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:0;border-top:1px solid var(--line)">
+      <div style="padding:18px 24px;border-right:1px solid var(--line)">
+        <div class="metric-label">Espera promedio</div>
+        <div class="sim-metric-val" id="sm-espera" style="color:var(--acc-text)">— s</div>
+      </div>
+      <div style="padding:18px 24px;border-right:1px solid var(--line)">
+        <div class="metric-label">Throughput</div>
+        <div class="sim-metric-val" id="sm-thr" style="color:var(--vehiculo)">—</div>
+      </div>
+      <div style="padding:18px 24px;border-right:1px solid var(--line)">
+        <div class="metric-label">Fase semáforo</div>
+        <div id="sm-fase" style="font-family:'IBM Plex Mono';font-weight:600;font-size:15px;
+          color:var(--semaforo);margin-top:10px">—</div>
+      </div>
+      <div style="padding:18px 24px;border-right:1px solid var(--line)">
+        <div class="metric-label">Vehículos activos</div>
+        <div id="sm-veh" style="font-family:'IBM Plex Mono';font-weight:600;font-size:15px;
+          margin-top:10px">—</div>
+      </div>
+      <div style="padding:18px 24px">
+        <div class="metric-label">Mejora vs. fijo</div>
+        <div id="sm-mejora" style="margin-top:10px">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leyenda de velocidad -->
+  <div style="display:flex;gap:20px;margin-top:12px;padding:0 4px;flex-wrap:wrap">
+    <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
+      <span class="sim-phase-dot" style="background:#1FE39B;box-shadow:0 0 6px #1FE39B"></span>Rápido (&gt;10 m/s)
+    </span>
+    <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
+      <span class="sim-phase-dot" style="background:#F2A33C;box-shadow:0 0 6px #F2A33C"></span>Moderado (5-10 m/s)
+    </span>
+    <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
+      <span class="sim-phase-dot" style="background:#FF5B47;box-shadow:0 0 6px #FF5B47"></span>Lento / detenido (&lt;5 m/s)
+    </span>
+    <span style="margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--muted)">
+      Intersección: <b style="color:var(--ink-soft)">Pino Suárez × Venustiano Carranza · Toluca</b>
+    </span>
+  </div>
+</div>`;
+
+  const footer = document.querySelector('.footer');
+  footer.parentNode.insertBefore(sec, footer);
+
+  /* ── 4. Botones de escenario ───────────────────────────── */
+  let selectedEscenario = 'hora_pico';
+  const scenarioCont = document.getElementById('sim-scenarios');
+
+  ESCENARIOS.forEach((esc, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'sim-esc-btn' + (i === 0 ? ' active' : '');
+    btn.dataset.id = esc.id;
+    btn.textContent = esc.nombre;
+    btn.style.color = esc.color;
+    btn.style.borderColor = esc.color + '66';
+    btn.addEventListener('click', () => {
+      selectedEscenario = esc.id;
+      scenarioCont.querySelectorAll('.sim-esc-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.id === esc.id);
+      });
+    });
+    scenarioCont.appendChild(btn);
+  });
+
+  /* ── 5. Leaflet: carga y mapa ─────────────────────────── */
+  let leafletMap = null;
+  let vehicleMarkers = {};
+  let mapReady = false;
+
+  function getSpeedColor(speed) {
+    if (speed > 10) return '#1FE39B';
+    if (speed > 5)  return '#F2A33C';
+    return '#FF5B47';
+  }
+
+  function loadLeafletJS(cb) {
+    if (window.L) { cb(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
+
+  function initMap() {
+    if (mapReady) return;
+    loadLeafletJS(() => {
+      mapReady = true;
+      leafletMap = L.map('sim-map', {
+        zoomControl: true,
+        attributionControl: false,
+      }).setView([19.28244, -99.65572], 17);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        subdomains: 'abcd',
+      }).addTo(leafletMap);
+
+      L.circleMarker([19.28244, -99.65572], {
+        radius: 12,
+        color: '#1FE39B',
+        fillColor: '#1FE39B',
+        fillOpacity: 0.25,
+        weight: 2,
+      }).addTo(leafletMap).bindPopup('<b>Intersección UrbanMind X</b><br>Pino Suárez × Venustiano Carranza');
+    });
+  }
+
+  function clearVehicles() {
+    Object.values(vehicleMarkers).forEach(m => m.remove());
+    vehicleMarkers = {};
+  }
+
+  function drawVehicles(vehiculos) {
+    if (!leafletMap) return;
+    const active = new Set(vehiculos.map(v => v.id));
+
+    Object.keys(vehicleMarkers).forEach(id => {
+      if (!active.has(id)) { vehicleMarkers[id].remove(); delete vehicleMarkers[id]; }
+    });
+
+    vehiculos.forEach(v => {
+      const color = getSpeedColor(v.velocidad);
+      if (vehicleMarkers[v.id]) {
+        vehicleMarkers[v.id]
+          .setLatLng([v.lat, v.lng])
+          .setStyle({ color, fillColor: color });
+      } else {
+        vehicleMarkers[v.id] = L.circleMarker([v.lat, v.lng], {
+          radius: 7,
+          color,
+          fillColor: color,
+          fillOpacity: 0.85,
+          weight: 1.5,
+        }).addTo(leafletMap)
+          .bindTooltip(`${v.id} · ${v.velocidad.toFixed(1)} m/s`, { sticky: true });
+      }
+    });
+  }
+
+  /* ── 6. Métricas en pantalla ──────────────────────────── */
+  function setStatus(msg, color) {
+    const el = document.getElementById('sim-status-txt');
+    el.textContent = msg;
+    el.style.color = color || 'var(--muted)';
+  }
+
+  function updateMetrics(m) {
+    if (m.espera_promedio != null)
+      document.getElementById('sm-espera').textContent = m.espera_promedio.toFixed(1) + ' s';
+    if (m.throughput != null)
+      document.getElementById('sm-thr').textContent = m.throughput.toLocaleString() + ' v/h';
+  }
+
+  function updateFase(fase) {
+    const faseNames = { 0: 'Norte-Sur ↕', 1: 'Amarillo →', 2: 'Este-Oeste ↔', 3: 'Amarillo ↓' };
+    document.getElementById('sm-fase').textContent = faseNames[fase] || 'Fase ' + fase;
+  }
+
+  function showMejora(espera) {
+    const base = BASE_ESPERA[selectedEscenario] || 48.5;
+    const pct = ((base - espera) / base * 100);
+    const el = document.getElementById('sm-mejora');
+    if (pct > 0) {
+      el.innerHTML = `<span class="chip down" style="font-size:13px;padding:5px 12px">−${pct.toFixed(1)}% espera</span>`;
+    } else {
+      el.innerHTML = `<span class="chip up" style="font-size:13px;padding:5px 12px">+${Math.abs(pct).toFixed(1)}% espera</span>`;
+    }
+  }
+
+  /* ── 7. Flujo principal: POST + WebSocket ─────────────── */
+  let activeWs = null;
+  const runBtn = document.getElementById('sim-run-btn');
+
+  async function iniciarSimulacion() {
+    if (activeWs) { activeWs.close(); activeWs = null; }
+
+    initMap();
+    clearVehicles();
+    document.getElementById('sm-espera').textContent = '— s';
+    document.getElementById('sm-thr').textContent = '—';
+    document.getElementById('sm-fase').textContent = '—';
+    document.getElementById('sm-veh').textContent = '—';
+    document.getElementById('sm-mejora').textContent = '—';
+
+    runBtn.disabled = true;
+    runBtn.textContent = '⏳ INICIANDO…';
+    setStatus('Conectando al backend…', 'var(--acc-text)');
+
+    /* POST /simulaciones */
+    let simId;
+    try {
+      const res = await fetch(`${BACKEND_URL}/simulaciones`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          interseccion_id: selectedEscenario,
+          escenario: selectedEscenario,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        setStatus('Error ' + res.status + ': ' + (err.detail || 'sin detalle'), '#FF5B47');
+        runBtn.disabled = false;
+        runBtn.textContent = '▶ REINTENTAR';
+        return;
+      }
+      const data = await res.json();
+      simId = data.simulacion_id;
+    } catch (e) {
+      setStatus('Sin conexión al backend (' + BACKEND_URL + ')', '#FF5B47');
+      runBtn.disabled = false;
+      runBtn.textContent = '▶ REINTENTAR';
+      return;
+    }
+
+    /* WebSocket /ws/{id} */
+    const wsUrl = BACKEND_URL.replace(/^https?/, m => m === 'https' ? 'wss' : 'ws') + `/ws/${simId}`;
+    const ws = new WebSocket(wsUrl);
+    activeWs = ws;
+
+    ws.onopen = () => {
+      runBtn.textContent = '■ DETENER';
+      runBtn.disabled = false;
+      runBtn.onclick = () => { ws.close(); };
+      setStatus('Simulando… (escenario: ' + selectedEscenario + ')', 'var(--acc-text)');
+    };
+
+    ws.onmessage = ev => {
+      let msg;
+      try { msg = JSON.parse(ev.data); } catch { return; }
+
+      if (msg.tipo === 'inicio') {
+        setStatus('Simulación en curso', 'var(--acc-text)');
+
+      } else if (msg.tipo === 'estado') {
+        if (msg.vehiculos)     drawVehicles(msg.vehiculos);
+        if (msg.metricas)      updateMetrics(msg.metricas);
+        if (msg.fase_semaforo != null) updateFase(msg.fase_semaforo);
+        const n = msg.vehiculos ? msg.vehiculos.length : 0;
+        document.getElementById('sm-veh').textContent = n + ' activos';
+
+      } else if (msg.tipo === 'fin') {
+        const mf = msg.metricas_finales;
+        if (mf) {
+          updateMetrics(mf);
+          if (mf.espera_promedio != null) showMejora(mf.espera_promedio);
+        }
+        setStatus('✓ Completada — ' + (selectedEscenario), 'var(--acc-text)');
+        runBtn.disabled = false;
+        runBtn.textContent = '▶ NUEVA SIMULACIÓN';
+        runBtn.onclick = iniciarSimulacion;
+        activeWs = null;
+
+      } else if (msg.tipo === 'error') {
+        setStatus('Error: ' + msg.mensaje, '#FF5B47');
+        runBtn.disabled = false;
+        runBtn.textContent = '▶ REINTENTAR';
+        runBtn.onclick = iniciarSimulacion;
+        activeWs = null;
+      }
+    };
+
+    ws.onerror = () => {
+      setStatus('Error de conexión WebSocket', '#FF5B47');
+    };
+
+    ws.onclose = () => {
+      if (runBtn.disabled) {
+        runBtn.disabled = false;
+        runBtn.textContent = '▶ NUEVA SIMULACIÓN';
+        runBtn.onclick = iniciarSimulacion;
+      }
+      activeWs = null;
+    };
+  }
+
+  runBtn.addEventListener('click', iniciarSimulacion);
+
+  /* ── 8. Reveal observer para los elementos de la nueva sección ── */
+  const revealObs = new IntersectionObserver(ents => {
+    ents.forEach(en => {
+      if (en.isIntersecting) { en.target.classList.add('in'); revealObs.unobserve(en.target); }
+    });
+  }, { threshold: 0.12 });
+  sec.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+})();
 </script>
 </body>
 </html>
