@@ -262,6 +262,7 @@ tbody tr:hover{background:rgba(127,127,127,.08)}tbody tr.row-hero:hover{backgrou
 .video-placeholder{position:relative;width:100%;aspect-ratio:16/9;background:var(--surface-2);border-top:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .video-placeholder video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
 .video-placeholder video.loaded{display:block}
+.video-placeholder iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .video-placeholder .vp-icon{width:56px;height:56px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;transition:border-color .2s,background .2s}
 .video-card.has-video .vp-icon{display:none}
 .video-placeholder .vp-icon svg{margin-left:3px}
@@ -432,7 +433,7 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
   <div class="video-grid">
 
     <!-- ── Video 1: Sistema Tradicional ── -->
-    <div class="card video-card tradicional-card reveal" id="videoCardTradicional">
+    <div class="card video-card tradicional-card reveal has-video" id="videoCardTradicional">
       <div class="video-label">
         <span class="video-label-tag tradicional">Control</span>
         <div>
@@ -441,8 +442,7 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
         </div>
       </div>
       <div class="video-placeholder" id="videoPlaceholderTradicional">
-        <!-- Reemplazar con: <video id="videoTradicional" src="TU_VIDEO_TRADICIONAL.mp4" controls preload="metadata"></video> -->
-        <video id="videoTradicional" controls preload="metadata"></video>
+        <iframe src="https://www.youtube.com/embed/jR4__b_K84" title="Sistema Tradicional — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-policy" allowfullscreen></iframe>
         <div class="vp-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </div>
@@ -452,7 +452,7 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
     </div>
 
     <!-- ── Video 2: UrbanMind X ── -->
-    <div class="card video-card urbanmind-card reveal" id="videoCardUrbanmind">
+    <div class="card video-card urbanmind-card reveal has-video" id="videoCardUrbanmind">
       <div class="video-label">
         <span class="video-label-tag urbanmind">UrbanMind X</span>
         <div>
@@ -461,8 +461,7 @@ body.intro-done .cine-bar.bottom{transform:translateY(100%)}
         </div>
       </div>
       <div class="video-placeholder" id="videoPlaceholderUrbanmind">
-        <!-- Reemplazar con: <video id="videoUrbanmind" src="TU_VIDEO_URBANMIND.mp4" controls preload="metadata"></video> -->
-        <video id="videoUrbanmind" controls preload="metadata"></video>
+        <iframe src="https://www.youtube.com/embed/jR4__b_K84s" title="UrbanMind X — video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-policy" allowfullscreen></iframe>
         <div class="vp-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         </div>
@@ -1086,26 +1085,6 @@ function mexpObserver(){
   const o=new IntersectionObserver((e)=>{e.forEach(en=>{if(en.isIntersecting){animateMexp();o.unobserve(en.target)}})},{threshold:.3});
   o.observe(host);
 }
-
-/* ── Activación de video cuando se asigna src ── */
-function activateVideoCard(videoId, cardId){
-  const vid = document.getElementById(videoId);
-  const card = document.getElementById(cardId);
-  if(!vid || !card) return;
-  // Si ya tiene src al cargar la página
-  if(vid.src && vid.src !== window.location.href){
-    vid.classList.add('loaded');
-    card.classList.add('has-video');
-  }
-  // También escuchar si se carga dinámicamente
-  vid.addEventListener('loadedmetadata', ()=>{
-    vid.classList.add('loaded');
-    card.classList.add('has-video');
-  });
-}
-activateVideoCard('videoTradicional','videoCardTradicional');
-activateVideoCard('videoUrbanmind','videoCardUrbanmind');
-
 
 let __actx=null;
 function __getCtx(){
